@@ -1,0 +1,2 @@
+Issues with peripeheral number 3 gnd connector soldering
+4 works check for all other segments

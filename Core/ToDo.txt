@@ -3,3 +3,7 @@
 3. Write code for SDC ctrl
 4. Work on can framing for DAQ
 5. Work on charging can
+
+
+Soldering Issues:
+1. In Board 1 Cell 6 balancing mos 

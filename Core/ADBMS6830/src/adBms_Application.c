@@ -56,7 +56,7 @@ static const uint8_t rev4_lut[16] = {
     0xF  /* 1111 -> 1111 */
 };
 
-#define TOTAL_IC 2
+#define TOTAL_IC 1
 cell_asic IC[TOTAL_IC];
 float tV;
 SEG_PARAMS *seg_paramst_list[] = {
@@ -329,16 +329,14 @@ void adBms6830_init_config(uint8_t tIC, cell_asic *ic)
 //    ic[cic].cfgb.dtmen = DTMEN_ON;
     ic[cic].tx_cfgb.vov = SetOverVoltageThreshold(OV_THRESHOLD);
     ic[cic].tx_cfgb.vuv = SetUnderVoltageThreshold(UV_THRESHOLD);
-    ic[cic].tx_cfgb.dtmen=0X0;
-    ic[cic].tx_cfgb.dcc = 0x0000;
+    ic[cic].tx_cfgb.dtmen=0;
+    ic[cic].tx_cfgb.dcc = 0x0FFF;
     //ic[cic].tx_cfgb.dtrng=0X0;
-    ic[cic].tx_cfgb.dcto=0X1;
+    ic[cic].tx_cfgb.dcto=1;
+    ic[cic].tx_cfgb.dtrng = 0;
+    
 
-    // Enable balance at full pwm test
-    ic[cic].PwmA.pwma[0]=15;
-
-
-    //SetConfigB_DischargeTimeOutValue(tIC, &ic[cic], RANG_0_TO_63_MIN, TIME_1MIN_OR_0_26HR);
+    SetConfigB_DischargeTimeOutValue(tIC, &ic[cic], RANG_0_TO_63_MIN, TIME_1MIN_OR_0_26HR);
   }
   adBmsWakeupIc(tIC);
   adBmsWriteData(tIC, &ic[0], WRCFGA, Config, A);
@@ -451,7 +449,7 @@ void adBms6830_read_cell_voltages(uint8_t tIC, cell_asic *ic)
   adBmsReadData(tIC, &ic[0], RDCVE, Cell, E);
   adBmsReadData(tIC, &ic[0], RDCVF, Cell, F);
 
-  adBms6830_update_dcc_from_cell_average(tIC, &ic[0]);
+  // adBms6830_update_dcc_from_cell_average(tIC, &ic[0]);
   adBmsWakeupIc(tIC);
   adBmsWriteData(tIC, &ic[0], WRCFGB, Config, B);
 
@@ -751,7 +749,7 @@ void adBms6830_setgpo_69(uint8_t tIC, cell_asic *ic) {
 		 val=0;
 		 SEG_PARAMS *st = seg_paramst_list[i];
 	    for (uint8_t value = 0x0; value <= 0xB; value++) {
-					ic[i].tx_cfga.refon = PWR_UP;
+					// ic[i].tx_cfga.refon = PWR_UP;
 					ic[i].tx_cfga.gpo = (((reverse4(value) << 5) & 0x3FF) | 0x21F) ;
 //					HAL_Delay(100);
 					adBmsWakeupIc(tIC);
